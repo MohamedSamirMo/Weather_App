@@ -12,9 +12,9 @@
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
         android:background="@drawable/searchviewshape"
         android:iconifiedByDefault="false"
         android:queryHint="Search For A City"
@@ -27,10 +27,11 @@
     </SearchView>
 
     <TextView
+        android:padding="@dimen/_6sdp"
         android:id="@+id/cityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/_11sdp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/loctaion"
         android:fontFamily="@font/merriweathersans_medium"
@@ -44,9 +45,9 @@
         android:id="@+id/today"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_70sdp"
         android:fontFamily="@font/merriweathersans_medium"
         android:text="Today"
         android:textColor="@color/black"
@@ -58,9 +59,9 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="@dimen/_124sdp"
+        android:layout_height="@dimen/_124sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cityName"
         app:lottie_autoPlay="true"
@@ -71,7 +72,7 @@
         android:id="@+id/temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:fontFamily="@font/merriweathersans_semibold"
         android:text="00:00 °C"
         android:textColor="@color/black"
@@ -85,7 +86,7 @@
         android:id="@+id/weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/_6sdp"
         android:fontFamily="@font/merriweathersans_regular"
         android:text="SUNNY"
         android:textSize="20sp"
@@ -109,7 +110,7 @@
         android:id="@+id/min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/merriweathersans_regular"
+        android:fontFamily="@font/merriweathersans_medium"
         android:text="Min:00:00°C"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/max"
@@ -120,7 +121,7 @@
         android:id="@+id/day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:fontFamily="@font/merriweathersans_bold"
         android:text="Tuesday"
         android:textColor="@color/black"
@@ -133,7 +134,7 @@
         android:id="@+id/data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/_2sdp"
         android:fontFamily="@font/merriweathersans_regular"
         android:text="25 january 2024"
         android:textColor="@color/black"
@@ -162,7 +163,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical">
@@ -173,6 +174,7 @@
                     app:srcCompat="@drawable/humidity" />
 
                 <TextView
+                    android:id="@+id/humidity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/merriweathersans_medium"
@@ -181,7 +183,6 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/humidity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -195,7 +196,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical"
@@ -229,7 +230,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical"
@@ -264,7 +265,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical"
@@ -298,7 +299,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout5"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical"
@@ -332,7 +333,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout6"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="88dp"
                 android:background="@drawable/backgroundshape"
                 android:gravity="bottom|center_vertical"
                 android:orientation="vertical"
@@ -384,19 +385,6 @@
 
     </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/merriweathersans_medium"
-        android:text="DESIGN BY\nMohamed Samir"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

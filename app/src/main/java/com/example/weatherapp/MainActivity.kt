@@ -1,116 +1,99 @@
 package com.example.weatherapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.SearchView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.weatherapp.databinding.ActivityMainBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import java.sql.Timestamp
+import com.example.weatherapp.models.weatherApp
+import com.example.weatherapp.viewmodel.WeatherViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.log
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private val viewModel: WeatherViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        fetchWeatherData("jaipur")
+
+        // Fetch default city weather data
+        fetchWeatherData("Jaipur")
         searchCity()
+
+        // Observe the weather data from ViewModel
+        viewModel.weatherData.observe(this, Observer { weather ->
+            weather?.let {
+                displayWeatherData(it)
+            }
+        })
     }
 
     private fun searchCity() {
-        val searchView=binding.searchView
-        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    fetchWeatherData(query)
+                query?.let {
+                    fetchWeatherData(it)
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                 return true
+                return true
             }
-
         })
     }
 
-    private fun fetchWeatherData(cityName:String) {
-        val retrofit=Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .build().create(ApiInterface::class.java)
-        val response=retrofit.getWeatherData(cityName,"491d5000961c37165ce758220c8fc812","metric")
-        response.enqueue(object : Callback<weatherApp>{
-            override fun onResponse(call: Call<weatherApp>, response: Response<weatherApp>) {
-                val responseBody=response.body()
-                if (response.isSuccessful && responseBody!=null){
-                    val temperature=responseBody.main.temp.toString()
-                    val humidity=responseBody.main.humidity
-                    val windSpeed=responseBody.wind.speed
-                    val sunRise=responseBody.sys.sunrise.toLong()
-                    val sunSet=responseBody.sys.sunset.toLong()
-                    val seaLevel= responseBody.main.pressure
-                    val condition=responseBody.weather.firstOrNull()?.main?:"unknown"
-                    val maxTemp=responseBody.main.temp_max
-                    val minTemp=responseBody.main.temp_min
-                    binding.temp.text="$temperature °C"
-                    binding.weather.text=condition
-                    binding.max.text="Max Temp :$maxTemp °C"
-                    binding.min.text="Min Temp :$minTemp °C"
-                    binding.humidity.text="$humidity %"
-                    binding.wind.text="$windSpeed m/s"
-                    binding.sunset.text="${time(sunSet)}"
-                    binding.sunRise.text="${time(sunRise)}"
-                    binding.sea.text="$seaLevel hPa"
-                    binding.Conditions.text=condition
-                    binding.day.text=dayName(System.currentTimeMillis())
-                        binding.data.text=data()
-                        binding.cityName.text="$cityName"
-                  //  Log.d("TAG", "onResponse:$temperature ")
-
-                    ChangeImageDataWeather(condition)
-                }
-            }
-
-            override fun onFailure(call: Call<weatherApp>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-
+    private fun fetchWeatherData(cityName: String) {
+        val apiKey = "491d5000961c37165ce758220c8fc812" // ضع مفتاح API الصحيح هنا
+        viewModel.fetchWeather(cityName, apiKey)
     }
 
-    private fun ChangeImageDataWeather(conditions:String) {
-        when(conditions){
-            "Clear Sky","Sunny","Clear" ->{
+    private fun displayWeatherData(weather: weatherApp) {
+        binding.temp.text = "${weather.main.temp} °C"
+        binding.weather.text = weather.weather.firstOrNull()?.main ?: "Unknown"
+        binding.max.text = "Max Temp: ${weather.main.temp_max} °C"
+        binding.min.text = "Min Temp: ${weather.main.temp_min} °C"
+        binding.humidity.text = "${weather.main.humidity} %"
+        binding.wind.text = "${weather.wind.speed} m/s"
+        binding.sunset.text = time(weather.sys.sunset.toLong())
+        binding.sunRise.text = time(weather.sys.sunrise.toLong())
+        binding.sea.text = "${weather.main.pressure} hPa"
+        binding.Conditions.text = weather.weather.firstOrNull()?.main ?: "Unknown"
+        binding.day.text = dayName(System.currentTimeMillis())
+        binding.data.text = data()
+        binding.cityName.text = "  "+weather.name
+
+        ChangeImageDataWeather(weather.weather.firstOrNull()?.main ?: "Unknown")
+    }
+
+    private fun ChangeImageDataWeather(condition: String) {
+        when (condition) {
+            "Clear", "Sunny" -> {
                 binding.root.setBackgroundResource(R.drawable.sunny_background)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
-            "Partly Clouds","Clouds","Overcast","Mist", "Foggy" ->{
+            "Clouds", "Overcast", "Mist", "Fog" -> {
                 binding.root.setBackgroundResource(R.drawable.colud_background)
                 binding.lottieAnimationView.setAnimation(R.raw.cloud)
             }
-            "Light Rain","Drizzle","Moderate Rain","Showers","Heavy Rain" ->{
+            "Rain", "Drizzle", "Showers" -> {
                 binding.root.setBackgroundResource(R.drawable.rain_background)
                 binding.lottieAnimationView.setAnimation(R.raw.rain)
             }
-            "Light Snow","Moderate Snow","Heavy Snow","Blizzard"->{
+            "Snow", "Blizzard", "Hail" -> {
                 binding.root.setBackgroundResource(R.drawable.snow_background)
                 binding.lottieAnimationView.setAnimation(R.raw.snow)
             }
-            else->{
+            else -> {
                 binding.root.setBackgroundResource(R.drawable.sunny_background)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
@@ -119,21 +102,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun data(): String {
-        val sdf=SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        return  sdf.format((Date()))
-
-
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        return sdf.format(Date())
     }
+
     private fun time(timestamp: Long): String {
-        val sdf=SimpleDateFormat("HH:mm", Locale.getDefault())
-        return  sdf.format((Date(timestamp*1000)))
-
-
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return sdf.format(Date(timestamp * 1000))
     }
 
-    fun dayName(timestamp: Long):String{
-        val sdf=SimpleDateFormat("EEEE", Locale.getDefault())
-        return  sdf.format((Date()))
-
+    private fun dayName(timestamp: Long): String {
+        val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
+        return sdf.format(Date())
     }
 }
